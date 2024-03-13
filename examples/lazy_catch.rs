@@ -15,7 +15,7 @@ fn main() -> Resultat<()> {
 }
 
 fn rand_even(rng: &mut ThreadRng) -> Resultat<u64> {
-    let n: u64 = rng.gen_range(3..=19260817);
+    let n: u64 = rng.gen_range(1..=1000_0000);
     assert_throw!(
         n % 2 == 0,                   // [required] boolean expression
         "UnluckyException",           // [optional] title
@@ -25,14 +25,18 @@ fn rand_even(rng: &mut ThreadRng) -> Resultat<u64> {
 }
 
 fn rand_odd(rng: &mut ThreadRng) -> Resultat<u64> {
-    let n: u64 = rng.gen_range(3..=19260817);
+    let n: u64 = rng.gen_range(1..=1000_0000);
     if n % 2 == 1 {
         return Ok(n);
     } else {
         throw!(
-            "UnluckyException",          // [required] title.
-            format!("{} is not odd", n)  // [required] error message.
+            // [required] title.
+            "UnluckyException",
+            // [required] error message.
+            format!("{} is not odd", n)
         );
+
         // throw!(); // Lazy variant
+        // throw!("DummyException", ""); // equivalent
     }
 }

@@ -1,6 +1,5 @@
 /// in lib.rs or main.rs,
 /// use erreur::*;
-
 use std::{fmt, result::Result as StdResult};
 
 pub struct Erreur {
@@ -21,18 +20,7 @@ pub type Resultat<T> = StdResult<T, Box<Erreur>>;
 impl Erreur {
     pub fn new() -> Box<Self> {
         Box::new(Erreur {
-            name: "UnknownException".to_string(),
-            file: String::new(),
-            line: 0,
-            column: 0,
-            context: None,
-            inner: None,
-        })
-    }
-
-    pub fn dummy() -> Box<Self> {
-        Box::new(Erreur {
-            name: String::new(),
+            name: "DummyException".to_string(),
             file: String::new(),
             line: 0,
             column: 0,
@@ -108,7 +96,8 @@ impl fmt::Display for Erreur {
         msg += "\"";
         if self.context.is_some() {
             let ctx = self.context.as_ref().unwrap().trim();
-            if ctx != "" {
+            #[allow(clippy::bool_comparison)]
+            if false == ctx.is_empty() {
                 msg += &format!("\nContext: {}", ctx);
             }
         }
@@ -151,7 +140,7 @@ where
     fn catch(self, name: &str, ctx: impl AsRef<str>) -> Resultat<T> {
         match self {
             Ok(v) => {
-                return Ok(v);
+                Ok(v)
             }
             Err(e) => {
                 let mut ex = Erreur::new();
@@ -163,7 +152,7 @@ where
                     .set_column(column)
                     .set_context(ctx)
                     .set_caused_by(e);
-                return Err(ex);
+                Err(ex)
             }
         }
     }
@@ -172,7 +161,7 @@ where
     fn catch_(self) -> Resultat<T> {
         match self {
             Ok(v) => {
-                return Ok(v);
+                Ok(v)
             }
             Err(e) => {
                 let mut ex = Erreur::new();
@@ -184,7 +173,7 @@ where
                     .set_column(column)
                     .set_context("")
                     .set_caused_by(e);
-                return Err(ex);
+                Err(ex)
             }
         }
     }

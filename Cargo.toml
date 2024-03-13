@@ -6,7 +6,7 @@ keywords = ["utility", "throw", "error", "result"]
 description = """A tiny crate that facilitates error handling,
 including tracing line numbers, customizing and propagating error messages."""
 repository = "https://github.com/winston-wen/erreur"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 
 [dependencies]
