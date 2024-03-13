@@ -1,10 +1,15 @@
 [package]
 name = "erreur"
+license = "MIT OR Apache-2.0"
+authors = ["winston-wen <winston-wen@hotmail.com>"]
+keywords = ["utility", "throw", "error", "result"]
+description = """A tiny crate that facilitates error handling,
+including tracing line numbers, customizing and propagating error messages."""
+repository = "https://github.com/winston-wen/erreur"
 version = "0.1.0"
 edition = "2021"
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 
 [dev-dependencies]
-rand = "*"
+rand = "0.8.5"
