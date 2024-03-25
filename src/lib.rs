@@ -139,9 +139,7 @@ where
     #[track_caller]
     fn catch(self, name: &str, ctx: impl AsRef<str>) -> Resultat<T> {
         match self {
-            Ok(v) => {
-                Ok(v)
-            }
+            Ok(v) => Ok(v),
             Err(e) => {
                 let mut ex = Erreur::new();
                 let loc = std::panic::Location::caller();
@@ -160,9 +158,7 @@ where
     #[track_caller]
     fn catch_(self) -> Resultat<T> {
         match self {
-            Ok(v) => {
-                Ok(v)
-            }
+            Ok(v) => Ok(v),
             Err(e) => {
                 let mut ex = Erreur::new();
                 let loc = std::panic::Location::caller();
@@ -260,7 +256,13 @@ impl<T> IfNone<T> for std::option::Option<T> {
     fn ifnone(self, name: &str, ctx: impl AsRef<str>) -> Resultat<T> {
         match self {
             Some(t) => Ok(t),
-            None => throw!(name, ctx),
+            None => {
+                if name.is_empty() {
+                    throw!("ObjectIsNone", ctx)
+                } else {
+                    throw!(name, ctx)
+                }
+            }
         }
     }
 
