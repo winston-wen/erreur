@@ -1,15 +1,17 @@
 [package]
 name = "erreur"
+version = "0.2.1"
+edition = "2021"
 license = "MIT OR Apache-2.0"
 authors = ["winston-wen <winston-wen@hotmail.com>"]
 keywords = ["utility", "throw", "error", "result"]
+categories = ["rust-patterns"]
 description = """A tiny crate that facilitates error handling,
 including tracing line numbers, customizing and propagating error messages."""
 repository = "https://github.com/winston-wen/erreur"
-version = "0.1.2"
-edition = "2021"
+readme = "README.md"
 
 [dependencies]
 
 [dev-dependencies]
-rand = "0.8.5"
+rand = "0.10.0"

@@ -1,3 +1,5 @@
+Other languages: [中文](./README.zh.md), [En français](./README.fr.md).
+
 # Quick Start
 
 After reading through this article, you will master the usage of:
@@ -25,8 +27,8 @@ NOTE: If you are writing your own fail-able function, let it return `Resultat<T>
 ```rust
 use erreur::*;
 
-fn rand_even(rng: &mut ThreadRng) -> Resultat<u64> {
-    let n: u64 = rng.gen_range(1..=1000_0000);
+fn rand_even(rng: &mut impl RngExt) -> Resultat<u64> {
+    let n: u64 = rng.random_range(1..=1000_0000);
     assert_throw!(
         // [required] boolean expression
         n % 2 == 0,
@@ -44,8 +46,8 @@ NOTE: if **exactly one** optional arg is given, the arg is treated as **error me
 ## 3. Example of `throw!(...)`
 
 ```rust
-fn rand_odd(rng: &mut ThreadRng) -> Resultat<u64> {
-    let n: u64 = rng.gen_range(1..=1000_0000);
+fn rand_odd(rng: &mut impl RngExt) -> Resultat<u64> {
+    let n: u64 = rng.random_range(1..=1000_0000);
     if n % 2 == 1 {
         return Ok(n);
     } else {
@@ -57,7 +59,7 @@ fn rand_odd(rng: &mut ThreadRng) -> Resultat<u64> {
         );
 
         // throw!(); // Lazy variant
-        // throw!("DummyException", ""); // equivalent
+        // throw!("UnknownException", ""); // equivalent
     }
 }
 ```
@@ -93,10 +95,10 @@ If the underlying error message is helpful enough, use lazy catch to track the c
 
 ```rust
 use erreur::*;
-use rand::{rngs::ThreadRng, Rng};
+use rand::{Rng, RngExt};
 
 fn main() -> Resultat<()> {
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
 
     let even = rand_even(&mut rng).catch_()?;
     println!("{}", even);
@@ -119,10 +121,10 @@ use erreur::*;
 use rand::Rng;
 
 fn main() -> Resultat<()> {
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
 
     let zoo = init_dict();
-    let dice = rng.gen_range(1..=6);
+    let dice = rng.random_range(1..=6);
 
     let animal = zoo
         .get(&dice)

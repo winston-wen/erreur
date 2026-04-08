@@ -1,7 +1,7 @@
 use erreur::*;
 
 /// Demonstrates full catch.
-/// The prgrammer is responsible for customizing helpful error message.
+/// The programmer is responsible for customizing helpful error message.
 fn main() -> Resultat<()> {
     let path = "/impossible/path/!@#$%^&*()_+.file";
 

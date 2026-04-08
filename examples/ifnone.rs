@@ -1,13 +1,13 @@
 use std::collections::HashMap;
 
 use erreur::*;
-use rand::Rng;
+use rand::RngExt;
 
 fn main() -> Resultat<()> {
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
 
     let zoo = init_dict();
-    let dice = rng.gen_range(1..=6);
+    let dice = rng.random_range(1..=6);
 
     let animal = zoo
         .get(&dice)

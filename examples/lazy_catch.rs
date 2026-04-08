@@ -1,9 +1,9 @@
 use erreur::*;
-use rand::{rngs::ThreadRng, Rng};
+use rand::{Rng, RngExt};
 
 /// Demonstrate "lazy catch". The program only propagates the error message.
 fn main() -> Resultat<()> {
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
 
     let even = rand_even(&mut rng).catch_()?;
     println!("{}", even);
@@ -14,8 +14,8 @@ fn main() -> Resultat<()> {
     Ok(())
 }
 
-fn rand_even(rng: &mut ThreadRng) -> Resultat<u64> {
-    let n: u64 = rng.gen_range(1..=1000_0000);
+fn rand_even(rng: &mut impl Rng) -> Resultat<u64> {
+    let n: u64 = rng.random_range(1..=1000_0000);
     assert_throw!(
         n % 2 == 0,                   // [required] boolean expression
         "UnluckyException",           // [optional] title
@@ -24,8 +24,8 @@ fn rand_even(rng: &mut ThreadRng) -> Resultat<u64> {
     Ok(n)
 }
 
-fn rand_odd(rng: &mut ThreadRng) -> Resultat<u64> {
-    let n: u64 = rng.gen_range(1..=1000_0000);
+fn rand_odd(rng: &mut impl Rng) -> Resultat<u64> {
+    let n: u64 = rng.random_range(1..=1000_0000);
     if n % 2 == 1 {
         return Ok(n);
     } else {
@@ -37,6 +37,6 @@ fn rand_odd(rng: &mut ThreadRng) -> Resultat<u64> {
         );
 
         // throw!(); // Lazy variant
-        // throw!("DummyException", ""); // equivalent
+        // throw!("UnknownException", ""); // equivalent
     }
 }
