@@ -17,7 +17,7 @@ fn main() -> Resultat<()> {
 fn rand_even(rng: &mut impl Rng) -> Resultat<u64> {
     let n: u64 = rng.random_range(1..=1000_0000);
     assert_throw!(
-        n % 2 == 0,                   // [required] boolean expression
+        n.is_multiple_of(2),          // [required] boolean expression
         "UnluckyException",           // [optional] title
         format!("{} is not even", n)  // [optional] error message
     ); // Note that if exactly one optional arg is given, the arg is treated as **error message**.
@@ -27,7 +27,7 @@ fn rand_even(rng: &mut impl Rng) -> Resultat<u64> {
 fn rand_odd(rng: &mut impl Rng) -> Resultat<u64> {
     let n: u64 = rng.random_range(1..=1000_0000);
     if n % 2 == 1 {
-        return Ok(n);
+        Ok(n)
     } else {
         throw!(
             // [required] title.

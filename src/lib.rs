@@ -16,7 +16,6 @@ pub struct Erreur {
 pub type Resultat<T> = StdResult<T, Box<Erreur>>;
 
 impl Erreur {
-    #[must_use]
     pub fn new() -> Box<Self> {
         Box::new(Erreur {
             name: Cow::Borrowed("UnknownException"),
@@ -84,10 +83,10 @@ impl fmt::Display for Erreur {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let mut msg: String = format!("Exception \"{}\" occurs at \"{}", self.name, self.file);
         if self.line > 0 {
-            msg += &format!(":{}", &self.line);
+            msg += &format!(":{}", self.line);
         }
         if self.column > 0 {
-            msg += &format!(":{}", &self.column);
+            msg += &format!(":{}", self.column);
         }
         msg += "\"";
         if let Some(ctx) = &self.context {
@@ -106,13 +105,15 @@ impl fmt::Display for Erreur {
 
 impl fmt::Debug for Erreur {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", &self.to_string())
+        fmt::Display::fmt(self, f)
     }
 }
 
 impl std::error::Error for Erreur {
     fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
-        self.inner.as_deref().map(|e| e as &(dyn std::error::Error + 'static))
+        self.inner
+            .as_deref()
+            .map(|e| e as &(dyn std::error::Error + 'static))
     }
 }
 
@@ -315,7 +316,10 @@ mod tests {
     #[test]
     fn display_basic() {
         let mut ex = Erreur::new();
-        ex.set_name("Boom").set_file("lib.rs").set_line(10).set_column(3);
+        ex.set_name("Boom")
+            .set_file("lib.rs")
+            .set_line(10)
+            .set_column(3);
         let msg = ex.to_string();
         assert!(msg.contains("Boom"));
         assert!(msg.contains("lib.rs:10:3"));
@@ -333,7 +337,10 @@ mod tests {
     #[test]
     fn display_includes_context() {
         let mut ex = Erreur::new();
-        ex.set_name("Err").set_file("a.rs").set_line(1).set_context("details here");
+        ex.set_name("Err")
+            .set_file("a.rs")
+            .set_line(1)
+            .set_context("details here");
         let msg = ex.to_string();
         assert!(msg.contains("Context: details here"));
     }
@@ -341,7 +348,10 @@ mod tests {
     #[test]
     fn display_skips_empty_context() {
         let mut ex = Erreur::new();
-        ex.set_name("Err").set_file("a.rs").set_line(1).set_context("");
+        ex.set_name("Err")
+            .set_file("a.rs")
+            .set_line(1)
+            .set_context("");
         let msg = ex.to_string();
         assert!(!msg.contains("Context:"));
     }
@@ -349,7 +359,10 @@ mod tests {
     #[test]
     fn display_skips_whitespace_only_context() {
         let mut ex = Erreur::new();
-        ex.set_name("Err").set_file("a.rs").set_line(1).set_context("   ");
+        ex.set_name("Err")
+            .set_file("a.rs")
+            .set_line(1)
+            .set_context("   ");
         let msg = ex.to_string();
         assert!(!msg.contains("Context:"));
     }
@@ -358,7 +371,10 @@ mod tests {
     fn display_includes_caused_by() {
         let inner = io::Error::new(io::ErrorKind::NotFound, "file missing");
         let mut ex = Erreur::new();
-        ex.set_name("Wrap").set_file("a.rs").set_line(1).set_caused_by(inner);
+        ex.set_name("Wrap")
+            .set_file("a.rs")
+            .set_line(1)
+            .set_caused_by(inner);
         let msg = ex.to_string();
         assert!(msg.contains("Caused by:"));
         assert!(msg.contains("file missing"));
